@@ -1,540 +1,839 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CollabResearch - Ekosistem Tukar Kuesioner</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-cream: #FDFBF7;
-            --accent-gold: #D4AF37;
-            --accent-gold-hover: #B5952F;
-            --soft-green: #A8C3A6;
-            --dark-green: #7A9B78;
-            --dark-text: #2C3E50;
-            --card-bg: #FFFFFF;
-            --gray-text: #7F8C8D;
-            --danger: #E74C3C;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReLab — Prototype</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --green:#1D9E75;--green-light:#E1F5EE;--green-mid:#5DCAA5;--green-dark:#085041;--green-deep:#04342C;
+      --red:#E04444;--red-light:#FDE8E8;--amber:#D97706;--amber-light:#FEF3C7;
+      --text-primary:#1a1a18;--text-secondary:#6b6b66;--text-tertiary:#a0a099;
+      --bg:#f5f4f0;--bg-card:#ffffff;--bg-subtle:#f9f8f5;
+      --border:rgba(0,0,0,0.08);--border-mid:rgba(0,0,0,0.13);
+      --radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-xl:24px;
+      --shadow-sm:0 1px 4px rgba(0,0,0,0.06);--shadow-md:0 4px 16px rgba(0,0,0,0.09);
+      --sidebar-w:220px;--font-serif:'DM Serif Display',serif;--font-sans:'DM Sans',sans-serif;
+    }
+    body{font-family:var(--font-sans);background:var(--bg);color:var(--text-primary);min-height:100vh;font-size:14px;line-height:1.5;}
+    .screen{display:none;min-height:100vh;}
+    .screen.active{display:flex;}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ─── PROTO NAV ─── */
+    .proto-nav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:999;display:flex;align-items:center;gap:6px;background:var(--green-deep);color:#fff;border-radius:999px;padding:8px 14px;font-size:12px;font-weight:500;box-shadow:0 4px 24px rgba(4,52,44,0.4);white-space:nowrap;}
+    .proto-nav span{color:var(--green-mid);margin-right:4px;}
+    .proto-btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:999px;padding:4px 12px;font-size:12px;font-family:var(--font-sans);cursor:pointer;transition:background .15s;}
+    .proto-btn:hover{background:rgba(255,255,255,0.22);}
+    .proto-btn.active{background:var(--green);border-color:var(--green);}
 
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: var(--bg-cream);
-            color: var(--dark-text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+    /* ─── ONBOARDING ─── */
+    #screen-onboarding{flex-direction:row;}
+    .ob-left{width:44%;background:var(--green-deep);color:#fff;padding:3rem 3.5rem;display:flex;flex-direction:column;justify-content:space-between;min-height:100vh;}
+    .ob-logo{display:flex;align-items:center;gap:10px;font-family:var(--font-serif);font-size:22px;color:#fff;}
+    .ob-logo-dot{width:10px;height:10px;background:var(--green-mid);border-radius:50%;}
+    .ob-tag{display:inline-block;background:rgba(93,202,165,0.18);color:var(--green-mid);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:1.25rem;}
+    .ob-headline{font-family:var(--font-serif);font-size:2.4rem;line-height:1.2;color:#fff;margin-bottom:1rem;}
+    .ob-headline em{color:var(--green-mid);font-style:italic;}
+    .ob-sub{color:rgba(255,255,255,0.65);font-size:14px;line-height:1.7;margin-bottom:2rem;}
+    .ob-stats{display:flex;gap:2rem;margin-bottom:2.5rem;}
+    .ob-stat-num{font-family:var(--font-serif);font-size:1.8rem;color:#fff;}
+    .ob-stat-label{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+    .ob-testi{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;}
+    .ob-testi-quote{font-size:13px;color:rgba(255,255,255,0.8);line-height:1.7;margin-bottom:1rem;font-style:italic;}
+    .ob-testi-author{display:flex;align-items:center;gap:10px;}
+    .ob-testi-av{width:32px;height:32px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+    .ob-testi-name{font-size:13px;font-weight:600;color:#fff;}
+    .ob-testi-role{font-size:11px;color:rgba(255,255,255,0.45);}
+    .ob-right{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 2.5rem;overflow-y:auto;}
+    .ob-form{width:100%;max-width:420px;}
+    .ob-prog-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-tertiary);margin-bottom:6px;}
+    .ob-prog-bg{height:4px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:2rem;}
+    .ob-prog-fill{height:100%;background:var(--green);border-radius:999px;transition:width .4s ease;}
+    .ob-step{display:none;}
+    .ob-step.active{display:block;}
+    .ob-step-title{font-family:var(--font-serif);font-size:1.6rem;margin-bottom:6px;}
+    .ob-step-desc{font-size:13px;color:var(--text-secondary);margin-bottom:1.75rem;line-height:1.65;}
+    .ob-btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;border:1.5px solid var(--border-mid);background:var(--bg-card);border-radius:var(--radius-md);padding:11px;font-size:14px;font-weight:500;cursor:pointer;transition:border-color .15s,box-shadow .15s;color:var(--text-primary);font-family:var(--font-sans);}
+    .ob-btn-google:hover{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.08);}
+    .ob-divider{display:flex;align-items:center;gap:10px;margin:1.25rem 0;}
+    .ob-divider-line{flex:1;height:1px;background:var(--border);}
+    .ob-divider-txt{font-size:12px;color:var(--text-tertiary);}
+    .ob-field{margin-bottom:1rem;}
+    .ob-label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;letter-spacing:.02em;}
+    .ob-input{width:100%;border:1.5px solid var(--border-mid);border-radius:var(--radius-md);padding:10px 13px;font-size:14px;font-family:var(--font-sans);color:var(--text-primary);background:var(--bg-card);transition:border-color .15s,box-shadow .15s;outline:none;}
+    .ob-input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.1);}
+    .ob-info{display:flex;align-items:flex-start;gap:8px;background:var(--green-light);border-radius:var(--radius-md);padding:10px 13px;font-size:12px;color:var(--green-dark);margin:1rem 0;line-height:1.6;}
+    .ob-btn{width:100%;background:var(--green);color:#fff;border:none;border-radius:var(--radius-md);padding:12px;font-size:15px;font-weight:600;font-family:var(--font-sans);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s;margin-top:.5rem;}
+    .ob-btn:hover{background:var(--green-dark);}
+    .ob-btn-back{display:block;width:100%;text-align:center;margin-top:.75rem;background:none;border:none;color:var(--text-tertiary);font-size:13px;cursor:pointer;font-family:var(--font-sans);padding:4px;}
+    .ob-btn-back:hover{color:var(--text-secondary);}
+    .ob-role-card{display:flex;align-items:flex-start;gap:14px;border:1.5px solid var(--border-mid);border-radius:var(--radius-lg);padding:1rem 1.1rem;margin-bottom:10px;cursor:pointer;transition:border-color .15s,background .15s;}
+    .ob-role-card:hover{border-color:var(--green);background:var(--green-light);}
+    .ob-role-card.sel{border-color:var(--green);background:var(--green-light);}
+    .ob-role-icon{font-size:1.5rem;line-height:1;}
+    .ob-role-name{font-size:14px;font-weight:600;margin-bottom:3px;}
+    .ob-role-desc{font-size:12px;color:var(--text-secondary);line-height:1.5;}
+    .ob-check{width:20px;height:20px;border:2px solid var(--border-mid);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;flex-shrink:0;margin-top:2px;transition:all .15s;}
+    .ob-role-card.sel .ob-check{border-color:var(--green);background:var(--green);color:#fff;}
+    .ob-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px;}
+    .ob-pill{border:1.5px solid var(--border-mid);background:var(--bg-card);border-radius:999px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:var(--font-sans);transition:all .15s;color:var(--text-primary);}
+    .ob-pill:hover{border-color:var(--green);}
+    .ob-pill.sel{background:var(--green);border-color:var(--green);color:#fff;}
+    .ob-field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .ob-tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+    .ob-tag-chip{background:var(--bg-subtle);border:1px solid var(--border);border-radius:999px;padding:4px 11px;font-size:12px;cursor:pointer;transition:all .15s;color:var(--text-secondary);}
+    .ob-tag-chip:hover,.ob-tag-chip.sel{border-color:var(--green);color:var(--green);background:var(--green-light);}
+    .ob-hint{font-size:11px;color:var(--text-tertiary);margin-top:8px;}
+    .ob-success{text-align:center;padding-top:1rem;}
+    .ob-success-icon{font-size:3.5rem;margin-bottom:1.25rem;}
+    .ob-success-title{font-family:var(--font-serif);font-size:1.8rem;margin-bottom:.5rem;}
+    .ob-success-sub{font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:1.5rem;}
+    .ob-bonus{display:inline-flex;align-items:center;gap:6px;background:var(--amber-light);color:var(--amber);border-radius:999px;padding:7px 16px;font-size:13px;font-weight:600;margin-bottom:1.5rem;}
+    .ob-summary{background:var(--bg-subtle);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.3rem;text-align:left;margin-bottom:1.5rem;}
+    .ob-summary-hd{font-size:12px;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;}
+    .ob-summary-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;}
+    .ob-summary-row:last-child{border-bottom:none;}
+    .ob-summary-key{color:var(--text-secondary);}
+    .ob-summary-val{font-weight:600;}
+    .val-green{color:var(--green);}
 
-        h1, h2, h3, .logo { font-family: 'Lora', serif; }
+    /* ─── SHARED APP ─── */
+    .app-layout{display:flex;width:100%;min-height:100vh;}
+    .sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--green-deep);display:flex;flex-direction:column;padding:0;flex-shrink:0;position:sticky;top:0;align-self:flex-start;}
+    .sb-logo{display:flex;align-items:center;gap:10px;font-family:var(--font-serif);font-size:20px;color:#fff;padding:1.5rem 1.4rem 1rem;border-bottom:1px solid rgba(255,255,255,0.07);}
+    .sb-logo-dot{width:8px;height:8px;background:var(--green-mid);border-radius:50%;}
+    .sb-user{display:flex;align-items:center;gap:10px;padding:1rem 1.4rem;border-bottom:1px solid rgba(255,255,255,0.07);}
+    .sb-avatar{width:34px;height:34px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+    .sb-user-name{font-size:13px;font-weight:600;color:rgba(255,255,255,0.9);}
+    .sb-user-role{font-size:11px;color:rgba(255,255,255,0.4);}
+    .sb-pts{margin:1rem 1.2rem .5rem;background:rgba(29,158,117,0.18);border:1px solid rgba(93,202,165,0.25);border-radius:var(--radius-md);padding:10px 12px;display:flex;align-items:center;gap:8px;}
+    .sb-pts-val{font-family:var(--font-serif);font-size:1.5rem;color:#fff;}
+    .sb-pts-label{font-size:11px;color:rgba(255,255,255,0.45);}
+    .sb-pts-gain{font-size:11px;color:var(--green-mid);margin-top:1px;}
+    .sb-nav{padding:.75rem .8rem;flex:1;}
+    .sb-nav-sec{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:8px 8px 4px;}
+    .sb-nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius-md);font-size:13px;color:rgba(255,255,255,0.55);cursor:pointer;transition:all .15s;text-decoration:none;margin-bottom:1px;}
+    .sb-nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.9);}
+    .sb-nav-item.active{background:rgba(29,158,117,0.25);color:#fff;}
+    .sb-icon{font-size:15px;width:20px;text-align:center;}
+    .sb-badge{margin-left:auto;background:var(--green);color:#fff;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:700;}
+    .sb-mode{margin:0 1.2rem 1.5rem;border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);overflow:hidden;}
+    .sb-mode-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:7px 10px 4px;}
+    .sb-mode-btn{display:flex;align-items:center;gap:8px;padding:9px 10px;font-size:12px;color:rgba(255,255,255,0.5);cursor:pointer;transition:all .15s;border:none;background:none;font-family:var(--font-sans);text-align:left;width:100%;}
+    .sb-mode-btn:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.85);}
+    .sb-mode-btn.active{background:rgba(29,158,117,0.2);color:var(--green-mid);font-weight:600;}
+    .main-area{flex:1;min-width:0;overflow-y:auto;}
+    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:1.75rem 2rem 0;flex-wrap:wrap;}
+    .topbar h1{font-family:var(--font-serif);font-size:1.7rem;margin-bottom:3px;}
+    .topbar p{font-size:13px;color:var(--text-secondary);}
+    .btn-create{background:var(--green);color:#fff;border:none;border-radius:var(--radius-md);padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans);white-space:nowrap;transition:background .15s;}
+    .btn-create:hover{background:var(--green-dark);}
+    .search-bar{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1.5px solid var(--border-mid);border-radius:var(--radius-md);padding:8px 13px;min-width:240px;}
+    .search-bar input{border:none;outline:none;background:none;font-size:13px;font-family:var(--font-sans);color:var(--text-primary);width:100%;}
+    .notif-btn{position:relative;cursor:pointer;font-size:1.2rem;}
+    .notif-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--bg);}
+    .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:1.5rem 2rem;}
+    .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.1rem;box-shadow:var(--shadow-sm);}
+    .stat-card.hl{background:var(--green-light);border-color:rgba(29,158,117,0.2);}
+    .stat-label{font-size:11px;color:var(--text-tertiary);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;}
+    .stat-val{font-family:var(--font-serif);font-size:2rem;color:var(--text-primary);line-height:1;margin-bottom:5px;}
+    .stat-card.hl .stat-val{color:var(--green-dark);}
+    .stat-sub{font-size:11px;color:var(--text-tertiary);}
+    .stat-sub span{color:var(--green);font-weight:600;}
+    .content-grid{display:grid;grid-template-columns:1fr 320px;gap:1.5rem;padding:0 2rem 2rem;}
+    .sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+    .sec-title{font-family:var(--font-serif);font-size:1.2rem;}
+    .sec-link{font-size:12px;color:var(--green);text-decoration:none;}
 
-        /* Bantuan Transisi Halaman */
-        .page-view {
-            display: none;
-            animation: fadeIn 0.8s ease forwards;
-        }
-        .page-view.active { display: block; }
+    /* RESPONDEN */
+    .filter-bar{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1rem;}
+    .fchip{border:1.5px solid var(--border-mid);background:var(--bg-card);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;font-family:var(--font-sans);transition:all .15s;color:var(--text-secondary);}
+    .fchip.active{background:var(--green);border-color:var(--green);color:#fff;}
+    .fchip:hover:not(.active){border-color:var(--green);color:var(--green);}
+    .k-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;margin-bottom:12px;box-shadow:var(--shadow-sm);transition:box-shadow .2s,border-color .2s;position:relative;overflow:hidden;}
+    .k-card.new::before{content:'BARU';position:absolute;top:14px;right:-20px;background:var(--green);color:#fff;font-size:9px;font-weight:700;letter-spacing:.08em;padding:3px 24px;transform:rotate(45deg);}
+    .k-card:hover{box-shadow:var(--shadow-md);border-color:rgba(29,158,117,0.25);}
+    .k-hd{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
+    .k-av{width:38px;height:38px;background:var(--green-light);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+    .k-title{font-size:14px;font-weight:600;line-height:1.4;margin-bottom:3px;}
+    .k-author{font-size:11px;color:var(--text-tertiary);}
+    .k-match{margin-left:auto;background:var(--green-light);color:var(--green-dark);font-size:11px;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap;flex-shrink:0;}
+    .k-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+    .k-tag{background:var(--bg-subtle);border:1px solid var(--border);border-radius:999px;padding:3px 9px;font-size:11px;color:var(--text-secondary);}
+    .k-footer{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding-top:10px;border-top:1px solid var(--border);}
+    .k-stat{font-size:12px;color:var(--text-secondary);}
+    .pts-badge{background:var(--green-light);color:var(--green-dark);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:700;}
+    .gate-overlay{display:none;background:rgba(245,244,240,0.97);border-top:1px solid var(--border-mid);border-radius:0 0 var(--radius-lg) var(--radius-lg);padding:1rem 1.25rem;margin:10px -1.25rem -1.1rem;}
+    .gate-overlay.vis{display:block;}
+    .gate-title{font-size:12px;font-weight:700;color:var(--text-secondary);margin-bottom:8px;}
+    .gate-q{font-size:14px;font-weight:500;margin-bottom:12px;line-height:1.5;}
+    .gate-btns{display:flex;gap:8px;}
+    .gate-btn{flex:1;padding:9px;border-radius:var(--radius-md);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:var(--font-sans);transition:all .15s;}
+    .gate-btn-y{background:var(--green);color:#fff;}
+    .gate-btn-y:hover{background:var(--green-dark);}
+    .gate-btn-n{background:var(--bg-subtle);color:var(--text-secondary);border:1px solid var(--border-mid);}
+    .gate-btn-n:hover{background:var(--red-light);color:var(--red);border-color:var(--red);}
+    .access-ok{display:none;align-items:center;gap:10px;background:var(--green-light);border-top:1px solid rgba(29,158,117,0.2);border-radius:0 0 var(--radius-lg) var(--radius-lg);padding:1rem 1.25rem;margin:10px -1.25rem -1.1rem;font-size:13px;}
+    .access-ok.vis{display:flex;}
+    .access-no{display:none;background:var(--red-light);border-top:1px solid rgba(224,68,68,0.2);border-radius:0 0 var(--radius-lg) var(--radius-lg);padding:1rem 1.25rem;margin:10px -1.25rem -1.1rem;font-size:13px;color:var(--red);}
+    .access-no.vis{display:block;}
+    .access-link{margin-left:auto;color:var(--green-dark);font-weight:700;text-decoration:none;font-size:13px;}
+    .access-link:hover{text-decoration:underline;}
+    .token-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem;box-shadow:var(--shadow-sm);margin-bottom:12px;}
+    .token-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+    .token-desc{font-size:11px;color:var(--text-tertiary);margin-bottom:10px;}
+    .token-row{display:flex;gap:8px;}
+    .token-input{flex:1;border:1.5px solid var(--border-mid);border-radius:var(--radius-md);padding:8px 12px;font-size:13px;font-family:var(--font-sans);outline:none;color:var(--text-primary);background:var(--bg-subtle);transition:border-color .15s;}
+    .token-input:focus{border-color:var(--green);}
+    .token-btn{background:var(--green);color:#fff;border:none;border-radius:var(--radius-md);padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:background .15s;}
+    .token-btn:hover{background:var(--green-dark);}
+    .token-result{margin-top:9px;font-size:12px;display:none;}
+    .token-result.ok{display:flex;align-items:center;gap:6px;color:var(--green-dark);background:var(--green-light);border-radius:var(--radius-sm);padding:7px 10px;}
+    .token-result.err{display:flex;align-items:center;gap:6px;color:var(--red);background:var(--red-light);border-radius:var(--radius-sm);padding:7px 10px;}
+    .r-panel{display:flex;flex-direction:column;gap:14px;}
+    .r-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.1rem;box-shadow:var(--shadow-sm);}
+    .r-card-title{font-size:13px;font-weight:700;margin-bottom:.75rem;}
+    .miss-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity .15s;}
+    .miss-item:last-child{border-bottom:none;}
+    .miss-item:hover{opacity:.75;}
+    .miss-icon{font-size:1.1rem;}
+    .miss-name{font-size:13px;font-weight:500;}
+    .miss-sub{font-size:11px;color:var(--text-tertiary);}
+    .miss-pts{margin-left:auto;font-size:12px;font-weight:700;color:var(--green);white-space:nowrap;}
+    .trust-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;}
+    .trust-val{font-weight:700;color:var(--green);}
+    .trust-bg{height:6px;background:var(--border);border-radius:999px;overflow:hidden;}
+    .trust-fill{height:100%;background:var(--green);border-radius:999px;}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    /* PENELITI */
+    .my-k-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow-sm);transition:box-shadow .2s;}
+    .my-k-card:hover{box-shadow:var(--shadow-md);}
+    .my-k-main{padding:1rem 1.25rem;}
+    .my-k-hd{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
+    .my-k-icon{width:38px;height:38px;background:var(--green-light);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+    .my-k-title{font-size:14px;font-weight:600;line-height:1.4;margin-bottom:3px;}
+    .my-k-date{font-size:11px;color:var(--text-tertiary);}
+    .status-badge{margin-left:auto;border-radius:999px;padding:3px 11px;font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+    .badge-live{background:var(--green-light);color:var(--green-dark);}
+    .badge-draft{background:var(--amber-light);color:var(--amber);}
+    .my-k-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+    .my-k-tag{background:var(--bg-subtle);border:1px solid var(--border);border-radius:999px;padding:3px 9px;font-size:11px;color:var(--text-secondary);}
+    .my-k-prog{margin-bottom:10px;}
+    .my-k-prog-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--text-tertiary);margin-bottom:5px;}
+    .my-k-prog-val{font-weight:700;color:var(--text-primary);}
+    .prog-bg{height:5px;background:var(--border);border-radius:999px;overflow:hidden;}
+    .prog-fill{height:100%;background:var(--green);border-radius:999px;}
+    .prog-fill.low{background:var(--amber);}
+    .my-k-foot{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding-top:10px;border-top:1px solid var(--border);}
+    .my-k-stat{font-size:11px;color:var(--text-secondary);}
+    .k-actions{margin-left:auto;display:flex;gap:7px;}
+    .k-btn{padding:6px 14px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:var(--font-sans);transition:all .15s;}
+    .k-btn-sec{background:var(--bg-subtle);color:var(--text-secondary);border:1px solid var(--border-mid);}
+    .k-btn-sec:hover{border-color:var(--green);color:var(--green);}
+    .k-btn-pri{background:var(--green);color:#fff;}
+    .k-btn-pri:hover{background:var(--green-dark);}
+    .my-k-detail{display:none;padding:1rem 1.25rem;background:var(--bg-subtle);border-top:1px solid var(--border);}
+    .my-k-detail.open{display:block;}
+    .detail-row{display:flex;gap:12px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;}
+    .detail-row:last-child{border-bottom:none;}
+    .detail-key{color:var(--text-tertiary);width:160px;flex-shrink:0;}
+    .detail-val{color:var(--text-primary);font-weight:500;}
+    .gate-disp{background:var(--green-light);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius-md);padding:10px 12px;margin-top:10px;}
+    .gate-disp-label{font-size:11px;font-weight:700;color:var(--green-dark);margin-bottom:5px;}
+    .gate-disp-q{font-size:13px;color:var(--green-dark);font-style:italic;}
+    .create-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);}
+    .cp-hd{background:var(--green-deep);color:#fff;padding:1.1rem 1.4rem;display:flex;align-items:flex-start;justify-content:space-between;}
+    .cp-title{font-family:var(--font-serif);font-size:1.2rem;margin-bottom:2px;}
+    .cp-sub{font-size:12px;color:rgba(255,255,255,0.6);}
+    .cp-step-lbl{font-size:11px;color:var(--green-mid);font-weight:600;margin-top:3px;}
+    .step-tabs{display:flex;border-bottom:1px solid var(--border);}
+    .step-tab{flex:1;text-align:center;padding:10px;font-size:12px;font-weight:600;color:var(--text-tertiary);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+    .step-tab.active{color:var(--green);border-bottom-color:var(--green);}
+    .create-body{padding:1.4rem;}
+    .create-body.hide{display:none;}
+    .c-field{margin-bottom:1rem;}
+    .c-label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;letter-spacing:.02em;}
+    .c-input{width:100%;border:1.5px solid var(--border-mid);border-radius:var(--radius-md);padding:9px 12px;font-size:13px;font-family:var(--font-sans);color:var(--text-primary);background:var(--bg-subtle);outline:none;transition:border-color .15s;}
+    .c-input:focus{border-color:var(--green);background:#fff;}
+    .c-textarea{min-height:72px;resize:vertical;line-height:1.5;}
+    .c-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .c-select{width:100%;border:1.5px solid var(--border-mid);border-radius:var(--radius-md);padding:9px 12px;font-size:13px;font-family:var(--font-sans);color:var(--text-primary);background:var(--bg-subtle);outline:none;cursor:pointer;}
+    .c-hint{font-size:11px;color:var(--text-tertiary);margin-top:4px;}
+    .gate-tog-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+    .gate-tog-lbl{font-size:13px;font-weight:600;}
+    .gate-tog-sub{font-size:11px;color:var(--text-tertiary);}
+    .tog{position:relative;width:40px;height:22px;}
+    .tog input{opacity:0;width:0;height:0;}
+    .tog-track{position:absolute;inset:0;background:#ddd;border-radius:999px;cursor:pointer;transition:background .2s;}
+    .tog-track::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+    .tog input:checked+.tog-track{background:var(--green);}
+    .tog input:checked+.tog-track::after{transform:translateX(18px);}
+    .gate-wrap{background:var(--green-light);border-radius:var(--radius-md);padding:.75rem 1rem;border:1px solid rgba(29,158,117,0.2);}
+    .pricing-est{background:var(--green-light);border:1px solid rgba(29,158,117,0.2);border-radius:var(--radius-lg);padding:1rem 1.1rem;margin-bottom:1rem;}
+    .pricing-title{font-size:12px;font-weight:700;color:var(--green-dark);margin-bottom:8px;}
+    .pricing-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid rgba(29,158,117,0.15);}
+    .pricing-row:last-child{border-bottom:none;font-weight:700;font-size:14px;}
+    .step-actions{display:flex;gap:10px;margin-top:1.25rem;}
+    .btn-next{flex:1;background:var(--green);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:background .15s;}
+    .btn-next:hover{background:var(--green-dark);}
+    .btn-prev{background:var(--bg-subtle);color:var(--text-secondary);border:1px solid var(--border-mid);border-radius:var(--radius-md);padding:11px 18px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--font-sans);transition:all .15s;}
+    .btn-prev:hover{border-color:var(--green);color:var(--green);}
+    .ledger-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;}
+    .ledger-item:last-child{border-bottom:none;}
+    .ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .ldot.plus{background:var(--green);}
+    .ldot.minus{background:var(--red);}
+    .llabel{flex:1;color:var(--text-secondary);}
+    .lval{font-weight:700;}
+    .lval.plus{color:var(--green);}
+    .lval.minus{color:var(--red);}
 
-        /* ================= LOGIN PAGE ================= */
-        #login-view {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: radial-gradient(circle at top right, #f4f1e1, var(--bg-cream));
-        }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .ain{animation:fadeIn .3s ease forwards;}
 
-        .login-card {
-            background: var(--card-bg);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            border-top: 5px solid var(--accent-gold);
-        }
-
-        .login-card h1 {
-            color: var(--soft-green);
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .login-card h1 span { color: var(--accent-gold); }
-        .login-card p { color: var(--gray-text); margin-bottom: 2rem; font-size: 0.95rem; }
-
-        .btn-google {
-            background-color: white;
-            color: var(--dark-text);
-            border: 1px solid #ddd;
-            padding: 1rem;
-            border-radius: 12px;
-            width: 100%;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-google:hover {
-            background-color: #f9f9f9;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transform: translateY(-2px);
-        }
-
-        /* ================= DASHBOARD PAGE ================= */
-        nav {
-            background-color: var(--card-bg);
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo { font-size: 1.5rem; font-weight: 600; color: var(--soft-green); cursor: pointer;}
-        .logo span { color: var(--accent-gold); }
-
-        .user-stats { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-        .stat-badge {
-            background-color: var(--bg-cream);
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            border: 1px solid #EAE5D9;
-        }
-        .points { color: var(--accent-gold); }
-        .trust { color: var(--dark-green); }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 5%;
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 2rem;
-        }
-
-        /* Header / Constellation */
-        .dashboard-header {
-            grid-column: 1 / -1;
-            background: linear-gradient(135deg, var(--soft-green), var(--dark-green));
-            color: white;
-            padding: 2.5rem;
-            border-radius: 15px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(168, 195, 166, 0.4);
-        }
-        .dashboard-header h2 { font-size: 2rem; margin-bottom: 0.5rem; }
-        .dashboard-header::after {
-            content: '✨';
-            position: absolute;
-            right: 40px;
-            top: 30px;
-            font-size: 5rem;
-            opacity: 0.15;
-        }
-
-        .section-title {
-            margin-bottom: 1.5rem;
-            color: var(--dark-text);
-            border-bottom: 2px solid var(--accent-gold);
-            display: inline-block;
-            padding-bottom: 0.3rem;
-            font-size: 1.3rem;
-        }
-
-        /* Token Box (Blind Handshake) */
-        .token-box {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            margin-bottom: 2rem;
-            border-left: 5px solid var(--accent-gold);
-        }
-        .token-input-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        input[type="text"] {
-            flex: 1;
-            padding: 0.8rem 1rem;
-            border: 2px solid #eee;
-            border-radius: 8px;
-            font-family: 'Nunito', sans-serif;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        input[type="text"]:focus { border-color: var(--accent-gold); outline: none; }
-        
-        button {
-            background-color: var(--accent-gold);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        button:hover { background-color: var(--accent-gold-hover); transform: translateY(-2px); }
-
-        .alert-success {
-            display: none;
-            background-color: #F9FBE7;
-            color: #558B2F;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-            font-weight: 600;
-            border-left: 4px solid #8BC34A;
-        }
-
-        /* Survey Cards */
-        .survey-grid { display: flex; flex-direction: column; gap: 1rem; }
-        .survey-card {
-            background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid transparent;
-            transition: all 0.2s ease;
-        }
-        .survey-card:hover {
-            border-color: var(--soft-green);
-            box-shadow: 0 4px 12px rgba(168, 195, 166, 0.2);
-        }
-        .survey-info h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
-        .meta-info { color: var(--gray-text); font-size: 0.85rem; margin-bottom: 0.5rem; display: flex; gap: 1rem;}
-        
-        .tags { display: flex; gap: 0.5rem; flex-wrap: wrap;}
-        .tag {
-            background-color: #F0F4F0;
-            color: var(--dark-green);
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-        .tag.screener { background-color: #FFF8E1; color: #F57F17; border: 1px solid #FFECB3; }
-
-        .survey-action { text-align: right; min-width: 120px; }
-        .reward {
-            color: var(--accent-gold);
-            font-weight: 800;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-        .btn-outline {
-            background-color: transparent;
-            color: var(--dark-green);
-            border: 2px solid var(--dark-green);
-            width: 100%;
-            padding: 0.5rem 1rem;
-        }
-        .btn-outline:hover { background-color: var(--dark-green); color: white; }
-        
-        .report-link {
-            display: block;
-            margin-top: 10px;
-            font-size: 0.75rem;
-            color: var(--gray-text);
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        .report-link:hover { color: var(--danger); }
-
-        /* Sidebar Widgets */
-        .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
-        .widget {
-            background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        .widget h4 { margin-bottom: 0.5rem; color: var(--dark-text); font-family: 'Lora', serif; font-size: 1.2rem;}
-        
-        .progress-container {
-            background: #eee;
-            border-radius: 10px;
-            height: 8px;
-            width: 100%;
-            margin: 1rem 0;
-            overflow: hidden;
-        }
-        .progress-bar {
-            background: var(--accent-gold);
-            height: 100%;
-            width: 60%; /* Simulasi saldo */
-            transition: width 0.5s ease;
-        }
-
-        .quest-list { margin-top: 1rem; }
-        .quest-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 0;
-            border-bottom: 1px dashed #eee;
-            font-size: 0.9rem;
-        }
-        .quest-item:last-child { border-bottom: none; }
-        .quest-icon { display: inline-block; width: 20px; }
-        .quest-reward { color: var(--accent-gold); font-weight: 700; background: #FFFDF5; padding: 2px 6px; border-radius: 4px;}
-        
-        .btn-full { width: 100%; margin-top: 1rem;}
-        .btn-disabled { background-color: #ddd; color: #999; cursor: not-allowed; }
-        .btn-disabled:hover { background-color: #ddd; transform: none; }
-
-        @media (max-width: 768px) {
-            .container { grid-template-columns: 1fr; }
-            .survey-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .survey-action { text-align: left; width: 100%; }
-            .btn-outline { width: auto; }
-            .user-stats { justify-content: flex-start; }
-        }
-    </style>
+    @media(max-width:900px){
+      .stats-strip{grid-template-columns:1fr 1fr;}
+      .content-grid{grid-template-columns:1fr;}
+      .c-row{grid-template-columns:1fr;}
+      .ob-left{display:none;}
+    }
+    @media(max-width:600px){
+      .sidebar{display:none;}
+      .topbar{padding:1.25rem 1.25rem 0;}
+      .content-grid{padding:0 1.25rem 2rem;}
+      .stats-strip{padding:1.25rem;}
+    }
+  </style>
 </head>
 <body>
 
-    <div id="login-view" class="page-view active">
-        <div class="login-card">
-            <h1>Collab<span>Research</span></h1>
-            <p>Ekosistem pertukaran data riset anonim, valid, dan saling menguntungkan.</p>
-            
-            <button class="btn-google" onclick="doLogin()">
-                <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                </svg>
-                Masuk dengan Google
-            </button>
-            <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #aaa;">Privasi Dijamin. Kami menggunakan sistem identitas samaran (Pseudonym).</p>
-        </div>
-    </div>
+<div class="proto-nav">
+  <span>✦ ReLab Prototype</span>
+  <button class="proto-btn active" id="pnav-onboarding" onclick="go('onboarding')">Onboarding</button>
+  <button class="proto-btn" id="pnav-responden" onclick="go('responden')">Dashboard Responden</button>
+  <button class="proto-btn" id="pnav-peneliti" onclick="go('peneliti')">Dashboard Peneliti</button>
+</div>
 
-    <div id="dashboard-view" class="page-view">
-        <nav>
-            <div class="logo">Collab<span>Research</span></div>
-            <div class="user-stats">
-                <span class="stat-badge">ID: <b style="color:var(--dark-text)">Scholar_Owl</b></span>
-                <span class="stat-badge points" id="nav-points">⭐ Saldo: 12 Poin</span>
-                <span class="stat-badge trust" title="Trust Score baik">🛡️ Trust: 98%</span>
+<!-- ══════════ ONBOARDING ══════════ -->
+<div class="screen active" id="screen-onboarding">
+  <div class="ob-left">
+    <div class="ob-logo"><div class="ob-logo-dot"></div> ReLab</div>
+    <div>
+      <div class="ob-tag">Research Exchange Platform</div>
+      <h1 class="ob-headline">Penelitianmu<br>butuh <em>responden<br>yang tepat.</em></h1>
+      <p class="ob-sub">ReLab menghubungkan peneliti dengan responden yang relevan — berbasis timbal balik, bukan iklan.</p>
+      <div class="ob-stats">
+        <div><div class="ob-stat-num">2.4k+</div><div class="ob-stat-label">Peneliti aktif</div></div>
+        <div><div class="ob-stat-num">18k+</div><div class="ob-stat-label">Kuesioner terisi</div></div>
+        <div><div class="ob-stat-num">97%</div><div class="ob-stat-label">Kepuasan peneliti</div></div>
+      </div>
+    </div>
+    <div class="ob-testi">
+      <p class="ob-testi-quote">"Dalam 2 hari saya dapat 120 responden yang benar-benar sesuai kriteria. Tidak perlu broadcast ke grup WhatsApp lagi."</p>
+      <div class="ob-testi-author">
+        <div class="ob-testi-av">AR</div>
+        <div><div class="ob-testi-name">Anisa R.</div><div class="ob-testi-role">Mahasiswa S2 Psikologi, UGM</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="ob-right">
+    <div class="ob-form">
+      <div class="ob-prog-meta"><span id="ob-lbl">Langkah 1 dari 4</span><span id="ob-pct">25%</span></div>
+      <div class="ob-prog-bg"><div class="ob-prog-fill" id="ob-fill" style="width:25%"></div></div>
+
+      <!-- S1 -->
+      <div class="ob-step active" id="ob-s1">
+        <h2 class="ob-step-title">Buat akun ReLab</h2>
+        <p class="ob-step-desc">Satu akun untuk menyebar dan mengisi kuesioner. Identitasmu tetap <strong>anonim</strong> dalam setiap penelitian.</p>
+        <button class="ob-btn-google" onclick="obGo(2)">
+          <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+          Lanjutkan dengan Google
+        </button>
+        <div class="ob-divider"><div class="ob-divider-line"></div><span class="ob-divider-txt">atau daftar dengan email</span><div class="ob-divider-line"></div></div>
+        <div class="ob-field"><label class="ob-label">Alamat email</label><input class="ob-input" type="email" placeholder="nama@email.com"></div>
+        <div class="ob-field"><label class="ob-label">Kata sandi</label><input class="ob-input" type="password" placeholder="Minimal 8 karakter"></div>
+        <div class="ob-info">🔒 Sistem kami mencegah duplikasi akun. Satu email = satu identitas. Data kamu tidak dibagikan ke siapapun.</div>
+        <button class="ob-btn" onclick="obGo(2)">Buat akun →</button>
+        <p style="text-align:center;font-size:12px;color:var(--text-tertiary);margin-top:1rem;">Sudah punya akun? <a href="#" style="color:var(--green);text-decoration:none;font-weight:500;" onclick="obGo(2);return false">Masuk di sini</a></p>
+      </div>
+
+      <!-- S2 -->
+      <div class="ob-step" id="ob-s2">
+        <h2 class="ob-step-title">Kamu lebih sering sebagai...</h2>
+        <p class="ob-step-desc">Pilih peran utama. Kamu tetap bisa melakukan keduanya kapan saja — ini hanya untuk tampilan awal dashboard.</p>
+        <div class="ob-role-card sel" id="ob-rc-p" onclick="obRole('p')">
+          <div class="ob-role-icon">📋</div>
+          <div style="flex:1"><div class="ob-role-name">Peneliti</div><div class="ob-role-desc">Kamu menyebarkan kuesioner dan membutuhkan responden yang sesuai kriteria riset.</div></div>
+          <div class="ob-check">✓</div>
+        </div>
+        <div class="ob-role-card" id="ob-rc-r" onclick="obRole('r')">
+          <div class="ob-role-icon">✍️</div>
+          <div style="flex:1"><div class="ob-role-name">Responden</div><div class="ob-role-desc">Kamu mengisi kuesioner, mengumpulkan poin, lalu bisa gunakan poin untuk menyebar risetmu sendiri.</div></div>
+          <div class="ob-check">✓</div>
+        </div>
+        <div class="ob-role-card" id="ob-rc-k" onclick="obRole('k')">
+          <div class="ob-role-icon">⚡</div>
+          <div style="flex:1"><div class="ob-role-name">Keduanya</div><div class="ob-role-desc">Kamu aktif mengisi sekaligus menyebar kuesioner. Cocok untuk peneliti yang produktif.</div></div>
+          <div class="ob-check">✓</div>
+        </div>
+        <button class="ob-btn" onclick="obGo(3)">Lanjut →</button>
+        <button class="ob-btn-back" onclick="obGo(1)">← Kembali</button>
+      </div>
+
+      <!-- S3 -->
+      <div class="ob-step" id="ob-s3">
+        <h2 class="ob-step-title">Lengkapi profil demografi</h2>
+        <p class="ob-step-desc">Hanya 3 data minimal. Digunakan untuk mencocokkan kamu dengan kuesioner relevan — tidak ditampilkan ke pengguna lain.</p>
+        <div class="ob-field">
+          <label class="ob-label">Jenis kelamin</label>
+          <div class="ob-pills" id="ob-gender">
+            <button class="ob-pill" onclick="obPill('ob-gender',this)">Laki-laki</button>
+            <button class="ob-pill" onclick="obPill('ob-gender',this)">Perempuan</button>
+            <button class="ob-pill" onclick="obPill('ob-gender',this)">Lainnya</button>
+            <button class="ob-pill" onclick="obPill('ob-gender',this)">Prefer tidak sebut</button>
+          </div>
+        </div>
+        <div class="ob-field-row">
+          <div class="ob-field"><label class="ob-label">Tahun lahir</label><input class="ob-input" type="number" placeholder="cth: 1998" min="1940" max="2010"></div>
+          <div class="ob-field"><label class="ob-label">Kota / Kabupaten</label><input class="ob-input" type="text" placeholder="cth: Surabaya"></div>
+        </div>
+        <div class="ob-field">
+          <label class="ob-label">Hashtag minat <span style="font-weight:400;color:var(--text-tertiary)">(opsional)</span></label>
+          <input class="ob-input" type="text" id="ob-htag" placeholder="misal: #Mahasiswa, #PekerjaRemote">
+          <p class="ob-hint">Klik untuk tambah cepat:</p>
+          <div class="ob-tag-row">
+            <span class="ob-tag-chip" onclick="obTag(this)">#Mahasiswa</span>
+            <span class="ob-tag-chip" onclick="obTag(this)">#PekerjaRemote</span>
+            <span class="ob-tag-chip" onclick="obTag(this)">#BUMN</span>
+            <span class="ob-tag-chip" onclick="obTag(this)">#Startup</span>
+            <span class="ob-tag-chip" onclick="obTag(this)">#GenZ</span>
+            <span class="ob-tag-chip" onclick="obTag(this)">#UKM</span>
+            <span class="ob-tag-chip" onclick="obTag(this)">#IbuRumahTangga</span>
+          </div>
+        </div>
+        <button class="ob-btn" onclick="obGo(4)">Simpan profil →</button>
+        <button class="ob-btn-back" onclick="obGo(2)">← Kembali</button>
+      </div>
+
+      <!-- S4 -->
+      <div class="ob-step" id="ob-s4">
+        <div class="ob-success">
+          <div class="ob-success-icon">🎉</div>
+          <h2 class="ob-success-title">Akun siap digunakan!</h2>
+          <p class="ob-success-sub">Selamat datang di ReLab. Profilmu telah tersimpan. Kamu akan tetap <strong>anonim</strong> di setiap penelitian yang kamu ikuti.</p>
+          <div class="ob-bonus">🎁 +10 Poin bonus selamat datang</div>
+          <div class="ob-summary">
+            <div class="ob-summary-hd">Ringkasan akun</div>
+            <div class="ob-summary-row"><span class="ob-summary-key">Status identitas</span><span class="ob-summary-val val-green">Anonim ✓</span></div>
+            <div class="ob-summary-row"><span class="ob-summary-key">Saldo poin awal</span><span class="ob-summary-val">10 Poin</span></div>
+            <div class="ob-summary-row"><span class="ob-summary-key">Skor kepercayaan</span><span class="ob-summary-val val-green">100 / 100</span></div>
+            <div class="ob-summary-row"><span class="ob-summary-key">Username anonim</span><span class="ob-summary-val">Anisa_R·5f2</span></div>
+          </div>
+          <button class="ob-btn" onclick="go('responden')">Mulai Gunakan ReLab →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DASHBOARD RESPONDEN ══════════ -->
+<div class="screen" id="screen-responden">
+  <div class="app-layout">
+    <div class="sidebar">
+      <div class="sb-logo"><div class="sb-logo-dot"></div> ReLab</div>
+      <div class="sb-user"><div class="sb-avatar">AN</div><div><div class="sb-user-name">Anisa_R·5f2</div><div class="sb-user-role">Responden / Peneliti</div></div></div>
+      <div class="sb-pts"><div>🪙</div><div><div class="sb-pts-val" id="pts-sb">48</div><div class="sb-pts-label">Saldo Poin</div><div class="sb-pts-gain">+12 minggu ini</div></div></div>
+      <nav class="sb-nav">
+        <div class="sb-nav-sec">Menu</div>
+        <a class="sb-nav-item active" href="#"><span class="sb-icon">🏠</span> Dashboard</a>
+        <a class="sb-nav-item" href="#"><span class="sb-icon">🔍</span> Jelajahi Kuesioner</a>
+        <a class="sb-nav-item" href="#"><span class="sb-icon">📬</span> Riwayat Pengisian <span class="sb-badge">9</span></a>
+        <a class="sb-nav-item" href="#"><span class="sb-icon">🏅</span> Misi &amp; Poin</a>
+        <a class="sb-nav-item" href="#"><span class="sb-icon">⚙️</span> Profil &amp; Privasi</a>
+      </nav>
+      <div class="sb-mode">
+        <div class="sb-mode-label">Mode Aktif</div>
+        <button class="sb-mode-btn active" onclick="go('responden')">✍️ Mode Responden</button>
+        <button class="sb-mode-btn" onclick="go('peneliti')">📋 Mode Peneliti</button>
+      </div>
+    </div>
+    <div class="main-area">
+      <div class="topbar">
+        <div><h1>Hai, Anisa 👋</h1><p>Ada <strong>4 kuesioner baru</strong> yang cocok dengan profilmu hari ini.</p></div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="search-bar"><span>🔍</span><input type="text" placeholder="Cari kuesioner atau hashtag..." oninput="filterCards(this.value)"></div>
+          <div class="notif-btn">🔔<span class="notif-dot"></span></div>
+        </div>
+      </div>
+      <div class="stats-strip">
+        <div class="stat-card hl"><div class="stat-label">Saldo Poin</div><div class="stat-val" id="pts-main">48</div><div class="stat-sub"><span>+12</span> minggu ini</div></div>
+        <div class="stat-card"><div class="stat-label">Kuesioner Diisi</div><div class="stat-val">9</div><div class="stat-sub"><span>+3</span> bulan ini</div></div>
+        <div class="stat-card"><div class="stat-label">Skor Kepercayaan</div><div class="stat-val">98</div><div class="stat-sub">dari 100 — <span>Sangat Baik</span></div></div>
+        <div class="stat-card"><div class="stat-label">Cocok Untukku</div><div class="stat-val">4</div><div class="stat-sub">kuesioner baru tersedia</div></div>
+      </div>
+      <div class="content-grid">
+        <div>
+          <div class="token-box">
+            <div class="token-title">🔑 Klaim Token Rahasia</div>
+            <div class="token-desc">Masukkan kode rahasia dari akhir kuesioner untuk mencairkan poinmu.</div>
+            <div class="token-row">
+              <input class="token-input" type="text" placeholder="Masukkan kode token..." id="tok-inp" onkeydown="if(event.key==='Enter')claimToken()">
+              <button class="token-btn" onclick="claimToken()">✦ Klaim</button>
             </div>
-        </nav>
-
-        <div class="container">
-            <header class="dashboard-header">
-                <h2>Selamat datang kembali, Scholar_Owl</h2>
-                <p>Profilmu sesuai dengan <strong>3 kuesioner</strong> hari ini. Bantu peneliti lain atau klaim poinmu untuk mulai menyebar kuesioner milikmu sendiri.</p>
-            </header>
-
-            <main>
-                <section class="token-box">
-                    <h2 class="section-title">Klaim Token / Validasi</h2>
-                    <p style="color: var(--gray-text); font-size: 0.95rem;">
-                        Telah menyelesaikan kuesioner? Masukkan <b>Kode Rahasia</b> yang muncul di halaman terakhir Google Forms untuk memvalidasi dan menerima imbalan Poin.
-                    </p>
-                    <div class="token-input-group">
-                        <input type="text" id="tokenInput" placeholder="Contoh: CR-9X8B-2026" autocomplete="off">
-                        <button id="claimBtn" onclick="claimToken()">Klaim Poin</button>
-                    </div>
-                    <div id="successAlert" class="alert-success"></div>
-                </section>
-
-                <section>
-                    <h2 class="section-title">Smart Matching: Cocok Untukmu</h2>
-                    <div class="survey-grid">
-                        
-                        <div class="survey-card">
-                            <div class="survey-info">
-                                <h3>Pengaruh Burnout terhadap Produktivitas Karyawan</h3>
-                                <div class="meta-info">
-                                    <span>⏱️ Estimasi: 10 Menit</span>
-                                    <span>🎯 Target: 100 Responden</span>
-                                </div>
-                                <div class="tags">
-                                    <span class="tag screener">⚠️ Ada Screener</span>
-                                    <span class="tag">#PekerjaPenuhWaktu</span>
-                                    <span class="tag">#Jabodetabek</span>
-                                    <span class="tag">Psikologi</span>
-                                </div>
-                            </div>
-                            <div class="survey-action">
-                                <span class="reward">+12 Poin</span>
-                                <button class="btn-outline">Ikuti Screener</button>
-                                <span class="report-link" onclick="reportSurvey()">Laporkan Pelanggaran</span>
-                            </div>
-                        </div>
-
-                        <div class="survey-card">
-                            <div class="survey-info">
-                                <h3>Perilaku Konsumtif Pengguna E-Wallet Generasi Z</h3>
-                                <div class="meta-info">
-                                    <span>⏱️ Estimasi: 5 Menit</span>
-                                    <span>🎯 Target: 250 Responden</span>
-                                </div>
-                                <div class="tags">
-                                    <span class="tag">#Mahasiswa</span>
-                                    <span class="tag">Ekonomi</span>
-                                </div>
-                            </div>
-                            <div class="survey-action">
-                                <span class="reward">+8 Poin</span>
-                                <button class="btn-outline">Isi Kuesioner</button>
-                                <span class="report-link" onclick="reportSurvey()">Laporkan Pelanggaran</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </section>
-            </main>
-
-            <aside class="sidebar">
-                <div class="widget">
-                    <h4>Kampanye Kuesioner</h4>
-                    <p style="font-size: 0.85rem; color: var(--gray-text);">Butuh minimal <b>20 Poin</b> untuk membuka akses penyebaran perdana.</p>
-                    
-                    <div class="progress-container">
-                        <div class="progress-bar" id="publishProgress" style="width: 60%;"></div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: bold; color: var(--gray-text);">
-                        <span id="currentPointsText">12 Pts</span>
-                        <span>20 Pts</span>
-                    </div>
-
-                    <button class="btn-full btn-disabled" id="publishBtn" disabled>Buat Kuesioner Baru</button>
-                </div>
-
-                <div class="widget">
-                    <h4>Misi Alternatif Poin</h4>
-                    <p style="font-size: 0.85rem; color: var(--gray-text);">Kriteria tidak cocok? Kumpulkan poin lewat jalur ini:</p>
-                    
-                    <div class="quest-list">
-                        <div class="quest-item">
-                            <div><span class="quest-icon">📜</span> The Chronicler</div>
-                            <span class="quest-reward">+10 Poin</span>
-                        </div>
-                        <div class="quest-item">
-                            <div><span class="quest-icon">🧭</span> Pilot Study (Review)</div>
-                            <span class="quest-reward">+5 Poin</span>
-                        </div>
-                        <div class="quest-item">
-                            <div><span class="quest-icon">👁️</span> Moderator (Verifikasi)</div>
-                            <span class="quest-reward">+2 Poin</span>
-                        </div>
-                        <div class="quest-item" style="margin-top: 10px;">
-                            <button class="btn-outline" style="width: 100%; font-size: 0.85rem; padding: 0.4rem;">Top-Up Poin Instan</button>
-                        </div>
-                    </div>
-                </div>
-            </aside>
+            <div class="token-result" id="tok-res"></div>
+          </div>
+          <div class="sec-hd" style="margin-top:1.25rem;"><div class="sec-title">Kuesioner untuk Kamu</div><a class="sec-link" href="#">Lihat semua →</a></div>
+          <div class="filter-bar">
+            <button class="fchip active" onclick="setFilter(this,'semua')">Semua</button>
+            <button class="fchip" onclick="setFilter(this,'mahasiswa')">#Mahasiswa</button>
+            <button class="fchip" onclick="setFilter(this,'pekerjarem')">#PekerjaRemote</button>
+            <button class="fchip" onclick="setFilter(this,'bumn')">#BUMN</button>
+            <button class="fchip" onclick="setFilter(this,'genz')">#GenZ</button>
+            <button class="fchip" onclick="setFilter(this,'startup')">#Startup</button>
+          </div>
+          <div id="k-list">
+            <div class="k-card new ain" data-tags="mahasiswa genz">
+              <div class="k-hd"><div class="k-av">🧠</div><div><div class="k-title">Kesehatan Mental Mahasiswa Pasca Pandemi</div><div class="k-author">oleh Dina Sari · Psikologi UI · 8 Apr 2026</div></div><div class="k-match">97% cocok</div></div>
+              <div class="k-tags"><span class="k-tag">#Mahasiswa</span><span class="k-tag">#GenZ</span><span class="k-tag">#Kesehatan</span></div>
+              <div class="k-footer"><span class="k-stat">⏱ ±8 menit</span><span class="k-stat">👥 43 resp</span><span class="k-stat">❓ 18 soal</span><span class="k-pts" style="margin-left:auto"><span class="pts-badge">🪙 +15 Poin</span></span></div>
+              <div class="gate-overlay vis" id="g1"><div class="gate-title">🔒 Pertanyaan Penyaring dari Peneliti</div><div class="gate-q">Apakah kamu saat ini berstatus mahasiswa aktif (S1/S2/S3)?</div><div class="gate-btns"><button class="gate-btn gate-btn-y" onclick="gate(1,true,15)">Ya, saya mahasiswa aktif</button><button class="gate-btn gate-btn-n" onclick="gate(1,false,0)">Tidak</button></div></div>
+              <div class="access-ok" id="a1">✅ <span style="flex:1">Kamu lolos! Kuesioner terbuka.</span><a class="access-link" href="#" onclick="alert('Membuka kuesioner...');return false">Buka Kuesioner →</a></div>
+              <div class="access-no" id="d1">❌ Maaf, kamu tidak memenuhi kriteria untuk kuesioner ini.</div>
+            </div>
+            <div class="k-card ain" data-tags="pekerjarem startup">
+              <div class="k-hd"><div class="k-av">💻</div><div><div class="k-title">Pola Produktivitas Pekerja Remote di Indonesia</div><div class="k-author">oleh Rizky M. · Manajemen Unair · 10 Apr 2026</div></div><div class="k-match">91% cocok</div></div>
+              <div class="k-tags"><span class="k-tag">#PekerjaRemote</span><span class="k-tag">#Startup</span><span class="k-tag">#WFH</span></div>
+              <div class="k-footer"><span class="k-stat">⏱ ±12 menit</span><span class="k-stat">👥 67 resp</span><span class="k-stat">❓ 24 soal</span><span class="k-pts" style="margin-left:auto"><span class="pts-badge">🪙 +20 Poin</span></span></div>
+              <div class="gate-overlay vis" id="g2"><div class="gate-title">🔒 Pertanyaan Penyaring dari Peneliti</div><div class="gate-q">Apakah kamu bekerja secara remote (WFH) minimal 3 hari per minggu dalam 3 bulan terakhir?</div><div class="gate-btns"><button class="gate-btn gate-btn-y" onclick="gate(2,true,20)">Ya</button><button class="gate-btn gate-btn-n" onclick="gate(2,false,0)">Tidak</button></div></div>
+              <div class="access-ok" id="a2">✅ <span style="flex:1">Kamu lolos! Kuesioner terbuka.</span><a class="access-link" href="#" onclick="alert('Membuka kuesioner...');return false">Buka Kuesioner →</a></div>
+              <div class="access-no" id="d2">❌ Maaf, kamu tidak memenuhi kriteria untuk kuesioner ini.</div>
+            </div>
+            <div class="k-card ain" data-tags="bumn">
+              <div class="k-hd"><div class="k-av">🏛️</div><div><div class="k-title">Kepuasan Kerja Karyawan BUMN di Jawa</div><div class="k-author">oleh Farhan A. · Ekonomi UB · 11 Apr 2026</div></div><div class="k-match">88% cocok</div></div>
+              <div class="k-tags"><span class="k-tag">#BUMN</span><span class="k-tag">#Karier</span><span class="k-tag">#HRD</span></div>
+              <div class="k-footer"><span class="k-stat">⏱ ±10 menit</span><span class="k-stat">👥 112 resp</span><span class="k-stat">❓ 20 soal</span><span class="k-pts" style="margin-left:auto"><span class="pts-badge">🪙 +18 Poin</span></span></div>
+              <div class="gate-overlay vis" id="g3"><div class="gate-title">🔒 Pertanyaan Penyaring dari Peneliti</div><div class="gate-q">Apakah kamu saat ini bekerja di perusahaan BUMN atau anak perusahaan BUMN?</div><div class="gate-btns"><button class="gate-btn gate-btn-y" onclick="gate(3,true,18)">Ya</button><button class="gate-btn gate-btn-n" onclick="gate(3,false,0)">Tidak</button></div></div>
+              <div class="access-ok" id="a3">✅ <span style="flex:1">Kamu lolos! Kuesioner terbuka.</span><a class="access-link" href="#" onclick="alert('Membuka kuesioner...');return false">Buka Kuesioner →</a></div>
+              <div class="access-no" id="d3">❌ Maaf, kamu tidak memenuhi kriteria untuk kuesioner ini.</div>
+            </div>
+            <div class="k-card ain" data-tags="genz mahasiswa">
+              <div class="k-hd"><div class="k-av">📱</div><div><div class="k-title">Kebiasaan Belanja Online Gen Z 2026</div><div class="k-author">oleh Clara V. · Komunikasi UPH · 12 Apr 2026</div></div><div class="k-match">84% cocok</div></div>
+              <div class="k-tags"><span class="k-tag">#GenZ</span><span class="k-tag">#ECommerce</span><span class="k-tag">#Perilaku</span></div>
+              <div class="k-footer"><span class="k-stat">⏱ ±6 menit</span><span class="k-stat">👥 234 resp</span><span class="k-stat">❓ 12 soal</span><span class="k-pts" style="margin-left:auto"><span class="pts-badge">🪙 +10 Poin</span></span></div>
+              <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;">
+                <button class="k-btn k-btn-pri" style="border-radius:var(--radius-md);padding:8px 20px;font-size:13px;" onclick="addPts(8);alert('Membuka kuesioner...')">Isi Sekarang → +10 Poin</button>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="r-panel">
+          <div class="r-card">
+            <div class="r-card-title">🏅 Skor Kepercayaan</div>
+            <div class="trust-row"><span>Akurasi Pengisian</span><span class="trust-val">98/100</span></div>
+            <div class="trust-bg"><div class="trust-fill" style="width:98%"></div></div>
+            <div style="margin-top:10px;font-size:12px;color:var(--text-secondary);">Pertahankan skor tinggi untuk mendapatkan kuesioner eksklusif dengan poin lebih besar.</div>
+          </div>
+          <div class="r-card">
+            <div class="r-card-title">🎯 Misi Aktif</div>
+            <div class="miss-item"><div class="miss-icon">👤</div><div><div class="miss-name">Lengkapi Profil Riset</div><div class="miss-sub">Isi minat dan demografi lengkap</div></div><div class="miss-pts">+10 Pts</div></div>
+            <div class="miss-item"><div class="miss-icon">📝</div><div><div class="miss-name">Isi 3 Kuesioner Minggu Ini</div><div class="miss-sub">Progress: 1/3 selesai</div></div><div class="miss-pts">+15 Pts</div></div>
+            <div class="miss-item"><div class="miss-icon">🤝</div><div><div class="miss-name">Undang Teman Peneliti</div><div class="miss-sub">Bagikan kode referral</div></div><div class="miss-pts">+20 Pts</div></div>
+            <div class="miss-item"><div class="miss-icon">⭐</div><div><div class="miss-name">Review Draft Kuesioner</div><div class="miss-sub">Bantu sesama peneliti</div></div><div class="miss-pts">+5 Pts</div></div>
+          </div>
+          <div class="r-card">
+            <div class="r-card-title">💡 Cara Lain Dapat Poin</div>
+            <div style="font-size:12px;color:var(--text-secondary);line-height:1.75;">Selain mengisi kuesioner, kamu bisa mendapatkan poin dari misi mingguan, referral teman, review draft kuesioner, dan deposit langsung.</div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <script>
-        let userPoints = 12;
-        const requiredPublishPoints = 20;
+<!-- ══════════ DASHBOARD PENELITI ══════════ -->
+<div class="screen" id="screen-peneliti">
+  <div class="app-layout">
+    <div class="sidebar">
+      <div class="sb-logo"><div class="sb-logo-dot"></div> ReLab</div>
+      <div class="sb-user"><div class="sb-avatar">AN</div><div><div class="sb-user-name">Anisa_R·5f2</div><div class="sb-user-role">Peneliti / Responden</div></div></div>
+      <div class="sb-pts"><div>🪙</div><div><div class="sb-pts-val">60</div><div class="sb-pts-label">Saldo Poin</div><div class="sb-pts-gain">140 terpakai untuk riset</div></div></div>
+      <nav class="sb-nav">
+        <div class="sb-nav-sec">Menu</div>
+        <a class="sb-nav-item active" href="#"><span class="sb-icon">🏠</span> Dashboard</a>
+        <a class="sb-nav-item" href="#"><span class="sb-icon">📋</span> Kuesionerku</a>
+        <a class="sb-nav-item" href="#" onclick="scrollCP();return false"><span class="sb-icon">✚</span> Buat Kuesioner</a>
+        <a class="sb-nav-item" href="#"><span class="sb-icon">📊</span> Analitik</a>
+        <a class="sb-nav-item" href="#"><span class="sb-icon">💳</span> Deposit Poin</a>
+        <a class="sb-nav-item" href="#"><span class="sb-icon">⚙️</span> Pengaturan</a>
+      </nav>
+      <div class="sb-mode">
+        <div class="sb-mode-label">Mode Aktif</div>
+        <button class="sb-mode-btn" onclick="go('responden')">✍️ Mode Responden</button>
+        <button class="sb-mode-btn active" onclick="go('peneliti')">📋 Mode Peneliti</button>
+      </div>
+    </div>
+    <div class="main-area" id="peneliti-main">
+      <div class="topbar">
+        <div><h1>Dashboard Peneliti</h1><p>Kelola, publish, dan pantau kuesionermu dari sini.</p></div>
+        <button class="btn-create" onclick="scrollCP()">✚ Buat Kuesioner Baru</button>
+      </div>
+      <div class="stats-strip">
+        <div class="stat-card hl"><div class="stat-label">Kuesioner Aktif</div><div class="stat-val">3</div><div class="stat-sub"><span>1</span> baru minggu ini</div></div>
+        <div class="stat-card"><div class="stat-label">Total Responden</div><div class="stat-val">312</div><div class="stat-sub"><span>+47</span> minggu ini</div></div>
+        <div class="stat-card"><div class="stat-label">Poin Terpakai</div><div class="stat-val">140</div><div class="stat-sub">dari 200 total deposit</div></div>
+        <div class="stat-card"><div class="stat-label">Rata-rata Waktu</div><div class="stat-val">1.4h</div><div class="stat-sub">per kuesioner terkumpul</div></div>
+      </div>
+      <div class="content-grid">
+        <div>
+          <div class="sec-hd"><div class="sec-title">Kuesionerku</div><a class="sec-link" href="#">Lihat arsip →</a></div>
+          <!-- Card 1 -->
+          <div class="my-k-card ain">
+            <div class="my-k-main">
+              <div class="my-k-hd"><div class="my-k-icon">🧠</div><div><div class="my-k-title">Kesehatan Mental Mahasiswa Pasca Pandemi</div><div class="my-k-date">Dibuat 8 Apr 2026 · Berakhir 22 Apr 2026</div></div><span class="status-badge badge-live">● Live</span></div>
+              <div class="my-k-tags"><span class="my-k-tag">#Mahasiswa</span><span class="my-k-tag">#GenZ</span><span class="my-k-tag">#Kesehatan</span></div>
+              <div class="my-k-prog"><div class="my-k-prog-meta"><span>Responden terkumpul</span><span class="my-k-prog-val">43 / 100</span></div><div class="prog-bg"><div class="prog-fill low" style="width:43%"></div></div></div>
+              <div class="my-k-foot"><span class="my-k-stat">⏱ ±8 mnt</span><span class="my-k-stat">❓ 18 soal</span><span class="my-k-stat">🔒 Gate aktif</span><div class="k-actions"><button class="k-btn k-btn-sec" onclick="togDetail(this)">Detail ▾</button><button class="k-btn k-btn-pri" onclick="alert('Membuka analitik...')">Analitik →</button></div></div>
+            </div>
+            <div class="my-k-detail">
+              <div class="detail-row"><span class="detail-key">Target demografi</span><span class="detail-val">Perempuan &amp; Laki-laki, 18–28 th, Seluruh Indonesia</span></div>
+              <div class="detail-row"><span class="detail-key">Poin per responden</span><span class="detail-val">15 Poin</span></div>
+              <div class="detail-row"><span class="detail-key">Poin yang dikunci</span><span class="detail-val">645 Poin (43 resp. × 15)</span></div>
+              <div class="detail-row"><span class="detail-key">Link kuesioner</span><span class="detail-val" style="color:var(--green)">forms.gle/xxxxx ↗</span></div>
+              <div class="gate-disp"><div class="gate-disp-label">🔒 Pertanyaan Gate Aktif</div><div class="gate-disp-q">"Apakah kamu saat ini berstatus mahasiswa aktif (S1/S2/S3)?"</div></div>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="my-k-card ain">
+            <div class="my-k-main">
+              <div class="my-k-hd"><div class="my-k-icon">💻</div><div><div class="my-k-title">Pola Produktivitas Pekerja Remote di Indonesia</div><div class="my-k-date">Dibuat 5 Apr 2026 · Berakhir 19 Apr 2026</div></div><span class="status-badge badge-live">● Live</span></div>
+              <div class="my-k-tags"><span class="my-k-tag">#PekerjaRemote</span><span class="my-k-tag">#WFH</span><span class="my-k-tag">#Startup</span></div>
+              <div class="my-k-prog"><div class="my-k-prog-meta"><span>Responden terkumpul</span><span class="my-k-prog-val">67 / 80</span></div><div class="prog-bg"><div class="prog-fill" style="width:84%"></div></div></div>
+              <div class="my-k-foot"><span class="my-k-stat">⏱ ±12 mnt</span><span class="my-k-stat">❓ 24 soal</span><span class="my-k-stat">🔒 Gate aktif</span><div class="k-actions"><button class="k-btn k-btn-sec" onclick="togDetail(this)">Detail ▾</button><button class="k-btn k-btn-pri" onclick="alert('Membuka analitik...')">Analitik →</button></div></div>
+            </div>
+            <div class="my-k-detail">
+              <div class="detail-row"><span class="detail-key">Target demografi</span><span class="detail-val">Semua gender, 22–45 th, Jawa &amp; Bali</span></div>
+              <div class="detail-row"><span class="detail-key">Poin per responden</span><span class="detail-val">20 Poin</span></div>
+              <div class="detail-row"><span class="detail-key">Poin yang dikunci</span><span class="detail-val">1.340 Poin (67 resp. × 20)</span></div>
+              <div class="detail-row"><span class="detail-key">Link kuesioner</span><span class="detail-val" style="color:var(--green)">tally.so/xxxxx ↗</span></div>
+              <div class="gate-disp"><div class="gate-disp-label">🔒 Pertanyaan Gate Aktif</div><div class="gate-disp-q">"Apakah kamu bekerja secara remote minimal 3 hari per minggu dalam 3 bulan terakhir?"</div></div>
+            </div>
+          </div>
+          <!-- Card 3 Draft -->
+          <div class="my-k-card ain">
+            <div class="my-k-main">
+              <div class="my-k-hd"><div class="my-k-icon">🛒</div><div><div class="my-k-title">Kebiasaan Belanja Grocery Online Ibu Rumah Tangga</div><div class="my-k-date">Draft · Terakhir diedit 13 Apr 2026</div></div><span class="status-badge badge-draft">Draft</span></div>
+              <div class="my-k-tags"><span class="my-k-tag">#IbuRumahTangga</span><span class="my-k-tag">#ECommerce</span></div>
+              <div class="my-k-foot"><span class="my-k-stat">⏱ ±10 mnt</span><span class="my-k-stat">❓ 16 soal</span><div class="k-actions"><button class="k-btn k-btn-sec" onclick="alert('Buka editor draft...')">Edit Draft</button><button class="k-btn k-btn-pri" onclick="scrollCP()">Publish →</button></div></div>
+            </div>
+          </div>
+          <!-- Create Panel -->
+          <div class="create-panel" id="cp" style="margin-top:2rem;">
+            <div class="cp-hd"><div><div class="cp-title">Buat Kuesioner Baru</div><div class="cp-sub">Isi detail, target demografi, pertanyaan gate, lalu publish.</div></div><span class="cp-step-lbl" id="cp-lbl">Langkah 1 dari 3</span></div>
+            <div class="step-tabs">
+              <div class="step-tab active" id="cp-t1" onclick="cpGo(1)">① Info Dasar</div>
+              <div class="step-tab" id="cp-t2" onclick="cpGo(2)">② Target &amp; Gate</div>
+              <div class="step-tab" id="cp-t3" onclick="cpGo(3)">③ Pricing &amp; Publish</div>
+            </div>
+            <div class="create-body" id="cp-s1">
+              <div class="c-field"><label class="c-label">Judul Kuesioner</label><input class="c-input" id="k-title" type="text" placeholder="cth: Pola Tidur Mahasiswa Semester Ganjil 2026"></div>
+              <div class="c-field"><label class="c-label">Deskripsi singkat (untuk responden)</label><textarea class="c-input c-textarea" placeholder="Jelaskan tujuan penelitianmu dalam 2–3 kalimat..."></textarea></div>
+              <div class="c-row">
+                <div class="c-field"><label class="c-label">Link Kuesioner Utama</label><input class="c-input" type="url" placeholder="https://forms.gle/xxxxx"></div>
+                <div class="c-field"><label class="c-label">Jumlah Pertanyaan</label><input class="c-input" type="number" placeholder="cth: 20"></div>
+              </div>
+              <div class="step-actions"><button class="btn-next" onclick="cpGo(2)">Lanjut: Target &amp; Gate →</button></div>
+            </div>
+            <div class="create-body hide" id="cp-s2">
+              <div class="c-row">
+                <div class="c-field"><label class="c-label">Jenis Kelamin Target</label><select class="c-select"><option>Semua gender</option><option>Laki-laki saja</option><option>Perempuan saja</option></select></div>
+                <div class="c-field"><label class="c-label">Rentang Usia</label><input class="c-input" type="text" placeholder="cth: 18–35"></div>
+              </div>
+              <div class="c-field"><label class="c-label">Hashtag Target</label><input class="c-input" type="text" placeholder="#Mahasiswa, #GenZ, #PekerjaRemote..."><div class="c-hint">Pisahkan dengan koma. Digunakan untuk mencocokkan responden yang relevan.</div></div>
+              <div class="c-field">
+                <div class="gate-tog-row"><div><div class="gate-tog-lbl">🔒 Aktifkan Pertanyaan Gate</div><div class="gate-tog-sub">Responden harus menjawab sebelum bisa mengisi kuesioner.</div></div><label class="tog"><input type="checkbox" id="gate-cb" onchange="togGate(this)"><div class="tog-track"></div></label></div>
+                <div class="gate-wrap" id="gate-wrap" style="display:none;"><div class="c-field" style="margin-bottom:0;"><label class="c-label" style="color:var(--green-dark)">Pertanyaan Penyaring (Ya/Tidak)</label><input class="c-input" type="text" placeholder="cth: Apakah kamu mahasiswa aktif S1/S2/S3?" style="background:#fff"><div class="c-hint" style="color:var(--green)">Responden yang menjawab 'Tidak' tidak akan bisa mengakses kuesioner.</div></div></div>
+              </div>
+              <div class="step-actions"><button class="btn-prev" onclick="cpGo(1)">← Kembali</button><button class="btn-next" onclick="cpGo(3)">Lanjut: Pricing &amp; Publish →</button></div>
+            </div>
+            <div class="create-body hide" id="cp-s3">
+              <div class="pricing-est">
+                <div class="pricing-title">💰 Estimasi Biaya Poin</div>
+                <div class="pricing-row"><span>Target responden</span><span id="pe-tar">100 orang</span></div>
+                <div class="pricing-row"><span>Reward per responden</span><span id="pe-rew">15 Poin</span></div>
+                <div class="pricing-row"><span>Subtotal reward</span><span id="pe-sub">1.500 Poin</span></div>
+                <div class="pricing-row"><span>Biaya platform (10%)</span><span id="pe-fee">150 Poin</span></div>
+                <div class="pricing-row"><span style="color:var(--green-dark)">Total yang dikunci</span><span style="color:var(--green-dark)" id="pe-tot">1.650 Poin</span></div>
+              </div>
+              <div class="c-row">
+                <div class="c-field"><label class="c-label">Target Jumlah Responden</label><input class="c-input" type="number" value="100" id="pe-t-in" oninput="updPricing()"></div>
+                <div class="c-field"><label class="c-label">Reward per Responden (Poin)</label><input class="c-input" type="number" value="15" min="5" id="pe-r-in" oninput="updPricing()"></div>
+              </div>
+              <div class="c-field"><label class="c-label">Tanggal Berakhir</label><input class="c-input" type="date"></div>
+              <div class="c-field" style="background:var(--green-light);border-radius:var(--radius-md);padding:10px 12px;border:1px solid rgba(29,158,117,0.2);">
+                <div style="font-size:12px;color:var(--green-dark);font-weight:600;margin-bottom:4px;">🔑 Token Rahasia akan di-generate otomatis</div>
+                <div style="font-size:12px;color:var(--green-dark);">Responden yang selesai mengisi akan mendapat token unik untuk mencairkan poin mereka.</div>
+              </div>
+              <div class="step-actions"><button class="btn-prev" onclick="cpGo(2)">← Kembali</button><button class="btn-next" onclick="doPublish()" style="background:var(--green-dark)">🚀 Publish Kuesioner</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="r-panel">
+          <div class="r-card">
+            <div class="r-card-title">🪙 Riwayat Poin</div>
+            <div class="ledger-item"><div class="ldot minus"></div><div class="llabel">Kunci riset "Mahasiswa Pasca Pandemi"</div><div class="lval minus">−645</div></div>
+            <div class="ledger-item"><div class="ldot plus"></div><div class="llabel">Deposit manual</div><div class="lval plus">+200</div></div>
+            <div class="ledger-item"><div class="ldot minus"></div><div class="llabel">Kunci riset "Pekerja Remote"</div><div class="lval minus">−1.340</div></div>
+            <div class="ledger-item"><div class="ldot plus"></div><div class="llabel">Mengisi kuesioner (+8 sesi)</div><div class="lval plus">+120</div></div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)"><button class="btn-create" style="width:100%;font-size:13px;" onclick="alert('Halaman deposit...')">💳 Deposit Poin</button></div>
+          </div>
+          <div class="r-card">
+            <div class="r-card-title">💡 Tips Dapat Responden Lebih Cepat</div>
+            <div style="font-size:12px;color:var(--text-secondary);line-height:1.75;">
+              <div style="margin-bottom:8px;">✓ Gunakan <strong>hashtag spesifik</strong> untuk menjangkau responden yang relevan.</div>
+              <div style="margin-bottom:8px;">✓ Aktifkan <strong>pertanyaan gate</strong> untuk menjamin kualitas data.</div>
+              <div>✓ Naikkan reward sedikit agar kuesioner diprioritaskan di feed responden.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        // Fungsi Transisi Login ke Dashboard
-        function doLogin() {
-            document.getElementById('login-view').classList.remove('active');
-            // Sedikit delay untuk efek realistis
-            setTimeout(() => {
-                document.getElementById('dashboard-view').classList.add('active');
-                window.scrollTo(0,0);
-            }, 300);
-        }
-
-        // Fungsi Simulasi Klaim Token (Blind Handshake)
-        function claimToken() {
-            const inputField = document.getElementById('tokenInput');
-            const tokenVal = inputField.value.trim();
-            const alertBox = document.getElementById('successAlert');
-            const btn = document.getElementById('claimBtn');
-
-            if(tokenVal === "") {
-                alert("Mohon masukkan kode rahasia dari halaman Google Forms.");
-                return;
-            }
-
-            // Simulasi proses loading (Time-Tracking check dummy)
-            btn.innerText = "Memverifikasi...";
-            btn.style.opacity = "0.8";
-
-            setTimeout(() => {
-                // Berhasil
-                const reward = 8; // dummy reward
-                userPoints += reward;
-                
-                // Update UI Poin
-                document.getElementById('nav-points').innerText = `⭐ Saldo: ${userPoints} Poin`;
-                document.getElementById('currentPointsText').innerText = `${userPoints} Pts`;
-                
-                // Update Progress Bar Penyebaran Kuesioner
-                let percentage = (userPoints / requiredPublishPoints) * 100;
-                if (percentage > 100) percentage = 100;
-                document.getElementById('publishProgress').style.width = `${percentage}%`;
-
-                // Buka kunci tombol Publish jika poin cukup
-                if (userPoints >= requiredPublishPoints) {
-                    const pubBtn = document.getElementById('publishBtn');
-                    pubBtn.classList.remove('btn-disabled');
-                    pubBtn.removeAttribute('disabled');
-                    pubBtn.style.backgroundColor = "var(--dark-green)";
-                    pubBtn.style.color = "white";
-                    pubBtn.style.cursor = "pointer";
-                    pubBtn.innerText = "✨ Sebar Kuesionermu";
-                }
-
-                // Tampilkan pesan sukses magis
-                alertBox.innerHTML = `✨ <b>Verifikasi Berhasil!</b> Kecepatan respons normal. ${reward} Poin telah ditambahkan ke saldomu.`;
-                alertBox.style.display = "block";
-                
-                // Reset input
-                inputField.value = "";
-                btn.innerText = "Klaim Poin";
-                btn.style.opacity = "1";
-
-                // Sembunyikan alert setelah 5 detik
-                setTimeout(() => { alertBox.style.display = "none"; }, 5000);
-
-            }, 1200);
-        }
-
-        // Fungsi Dummy Pelaporan Whistleblower
-        function reportSurvey() {
-            const confirmReport = confirm("PENTING: Apakah kuesioner ini meminta data pribadi (Nama, Email, No HP)? Laporan palsu akan menurunkan Trust Score Anda.");
-            if(confirmReport) {
-                alert("Laporan diterima. Kuesioner ini telah dibekukan sementara untuk ditinjau oleh Moderator.");
-            }
-        }
-    </script>
+<script>
+  // SCREEN
+  function go(name){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('screen-'+name).classList.add('active');
+    document.querySelectorAll('.proto-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('pnav-'+name).classList.add('active');
+    window.scrollTo(0,0);
+  }
+  // ONBOARDING
+  function obGo(s){
+    document.querySelectorAll('.ob-step').forEach(el=>el.classList.remove('active'));
+    document.getElementById('ob-s'+s).classList.add('active');
+    const lbls=['','Langkah 1 dari 4','Langkah 2 dari 4','Langkah 3 dari 4','Langkah 4 dari 4'];
+    const pcts=['','25%','50%','75%','100%'];
+    document.getElementById('ob-lbl').textContent=lbls[s];
+    document.getElementById('ob-pct').textContent=pcts[s];
+    document.getElementById('ob-fill').style.width=pcts[s];
+  }
+  function obRole(r){
+    ['p','r','k'].forEach(x=>document.getElementById('ob-rc-'+x).classList.remove('sel'));
+    document.getElementById('ob-rc-'+r).classList.add('sel');
+  }
+  function obPill(gid,btn){
+    document.querySelectorAll('#'+gid+' .ob-pill').forEach(p=>p.classList.remove('sel'));
+    btn.classList.add('sel');
+  }
+  function obTag(chip){
+    const inp=document.getElementById('ob-htag');
+    const t=chip.textContent;
+    if(!inp.value.includes(t)) inp.value=(inp.value?inp.value+', ':'')+t;
+    chip.classList.add('sel');
+  }
+  // GATE
+  let pts=48;
+  function gate(id,ok,amount){
+    document.getElementById('g'+id).classList.remove('vis');
+    if(ok){
+      document.getElementById('a'+id).classList.add('vis');
+      const net=Math.round(amount*0.8);
+      addPts(net);
+      flash('+'+net+' Pts (setelah pajak 20%)');
+    } else {
+      document.getElementById('d'+id).classList.add('vis');
+    }
+  }
+  function addPts(n){
+    pts+=n;
+    document.getElementById('pts-main').textContent=pts;
+    document.getElementById('pts-sb').textContent=pts;
+  }
+  function flash(msg){
+    const el=document.createElement('div');
+    el.textContent=msg;
+    Object.assign(el.style,{position:'fixed',top:'80px',right:'2rem',background:'var(--green)',color:'#fff',padding:'10px 18px',borderRadius:'999px',fontWeight:'700',fontSize:'14px',zIndex:'9999',boxShadow:'0 4px 20px rgba(29,158,117,0.4)',fontFamily:'var(--font-sans)'});
+    document.body.appendChild(el);
+    setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .4s';},1800);
+    setTimeout(()=>el.remove(),2300);
+  }
+  // FILTER
+  let activeF='semua';
+  function setFilter(btn,f){
+    document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    activeF=f;
+    document.querySelectorAll('#k-list .k-card').forEach(c=>{
+      c.style.display=(f==='semua'||(c.dataset.tags||'').includes(f))?'':'none';
+    });
+  }
+  function filterCards(q){
+    document.querySelectorAll('#k-list .k-card').forEach(c=>{
+      const t=c.innerText.toLowerCase();
+      const tags=(c.dataset.tags||'');
+      c.style.display=(!q||t.includes(q.toLowerCase()))&&(activeF==='semua'||tags.includes(activeF))?'':'none';
+    });
+  }
+  // TOKEN
+  const usedToks=new Set();
+  function claimToken(){
+    const inp=document.getElementById('tok-inp');
+    const res=document.getElementById('tok-res');
+    const raw=inp.value.trim().toUpperCase();
+    res.className='token-result';
+    if(!raw)return;
+    if(usedToks.has(raw)){res.className='token-result err';res.innerHTML='❌ Token ini sudah pernah diklaim.';return;}
+    if(raw.length<4){res.className='token-result err';res.innerHTML='❌ Token tidak valid. Periksa kembali kode kamu.';return;}
+    usedToks.add(raw);
+    const validMap={'RLB-2F9X':8,'RLB-A1K3':12,'RLB-Z7PM':6,'TEST':8};
+    const base=validMap[raw]||(Math.floor(Math.random()*10)+5);
+    const net=Math.round(base*0.8);
+    addPts(net);
+    res.className='token-result ok';
+    res.innerHTML='✅ Token valid! +'+net+' Poin berhasil dikreditkan (setelah pajak 20%).';
+    inp.value='';
+    flash('+'+net+' Pts');
+    setTimeout(()=>{res.className='token-result';},5000);
+  }
+  // DETAIL TOGGLE
+  function togDetail(btn){
+    const detail=btn.closest('.my-k-card').querySelector('.my-k-detail');
+    const open=detail.classList.toggle('open');
+    btn.textContent=open?'Detail ▴':'Detail ▾';
+  }
+  // CREATE PANEL
+  function cpGo(s){
+    [1,2,3].forEach(i=>{
+      document.getElementById('cp-s'+i).classList.toggle('hide',i!==s);
+      document.getElementById('cp-t'+i).classList.toggle('active',i===s);
+    });
+    document.getElementById('cp-lbl').textContent='Langkah '+s+' dari 3';
+    if(s===3)updPricing();
+  }
+  function togGate(cb){document.getElementById('gate-wrap').style.display=cb.checked?'block':'none';}
+  function updPricing(){
+    const t=parseInt(document.getElementById('pe-t-in')?.value)||100;
+    const r=parseInt(document.getElementById('pe-r-in')?.value)||15;
+    const sub=t*r,fee=Math.round(sub*.1),tot=sub+fee;
+    document.getElementById('pe-tar').textContent=t+' orang';
+    document.getElementById('pe-rew').textContent=r+' Poin';
+    document.getElementById('pe-sub').textContent=sub.toLocaleString('id-ID')+' Poin';
+    document.getElementById('pe-fee').textContent=fee.toLocaleString('id-ID')+' Poin';
+    document.getElementById('pe-tot').textContent=tot.toLocaleString('id-ID')+' Poin';
+  }
+  function doPublish(){
+    const title=document.getElementById('k-title')?.value||'Kuesioner Baru';
+    const token='RLB-'+Math.random().toString(36).substring(2,6).toUpperCase();
+    alert('🚀 Kuesioner "'+title+'" berhasil dipublish!\n\nToken Rahasia untuk responden: '+token+'\n\nLetakkan kode ini di akhir kuesionermu.');
+  }
+  function scrollCP(){
+    const el=document.getElementById('cp');
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+</script>
 </body>
 </html>
