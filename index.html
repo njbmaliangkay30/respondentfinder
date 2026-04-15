@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CollabResearch - Ekosistem Tukar Kuesioner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FDFBF7;
+            --accent-gold: #D4AF37;
+            --accent-gold-hover: #B5952F;
+            --soft-green: #A8C3A6;
+            --dark-green: #7A9B78;
+            --dark-text: #2C3E50;
+            --card-bg: #FFFFFF;
+            --gray-text: #7F8C8D;
+            --danger: #E74C3C;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--dark-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .logo { font-family: 'Lora', serif; }
+
+        /* Bantuan Transisi Halaman */
+        .page-view {
+            display: none;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .page-view.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= LOGIN PAGE ================= */
+        #login-view {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at top right, #f4f1e1, var(--bg-cream));
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            border-top: 5px solid var(--accent-gold);
+        }
+
+        .login-card h1 {
+            color: var(--soft-green);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-card h1 span { color: var(--accent-gold); }
+        .login-card p { color: var(--gray-text); margin-bottom: 2rem; font-size: 0.95rem; }
+
+        .btn-google {
+            background-color: white;
+            color: var(--dark-text);
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-google:hover {
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
+        }
+
+        /* ================= DASHBOARD PAGE ================= */
+        nav {
+            background-color: var(--card-bg);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 600; color: var(--soft-green); cursor: pointer;}
+        .logo span { color: var(--accent-gold); }
+
+        .user-stats { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .stat-badge {
+            background-color: var(--bg-cream);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid #EAE5D9;
+        }
+        .points { color: var(--accent-gold); }
+        .trust { color: var(--dark-green); }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 5%;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+        }
+
+        /* Header / Constellation */
+        .dashboard-header {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--soft-green), var(--dark-green));
+            color: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(168, 195, 166, 0.4);
+        }
+        .dashboard-header h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .dashboard-header::after {
+            content: '✨';
+            position: absolute;
+            right: 40px;
+            top: 30px;
+            font-size: 5rem;
+            opacity: 0.15;
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            color: var(--dark-text);
+            border-bottom: 2px solid var(--accent-gold);
+            display: inline-block;
+            padding-bottom: 0.3rem;
+            font-size: 1.3rem;
+        }
+
+        /* Token Box (Blind Handshake) */
+        .token-box {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--accent-gold);
+        }
+        .token-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus { border-color: var(--accent-gold); outline: none; }
+        
+        button {
+            background-color: var(--accent-gold);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover { background-color: var(--accent-gold-hover); transform: translateY(-2px); }
+
+        .alert-success {
+            display: none;
+            background-color: #F9FBE7;
+            color: #558B2F;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 600;
+            border-left: 4px solid #8BC34A;
+        }
+
+        /* Survey Cards */
+        .survey-grid { display: flex; flex-direction: column; gap: 1rem; }
+        .survey-card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .survey-card:hover {
+            border-color: var(--soft-green);
+            box-shadow: 0 4px 12px rgba(168, 195, 166, 0.2);
+        }
+        .survey-info h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+        .meta-info { color: var(--gray-text); font-size: 0.85rem; margin-bottom: 0.5rem; display: flex; gap: 1rem;}
+        
+        .tags { display: flex; gap: 0.5rem; flex-wrap: wrap;}
+        .tag {
+            background-color: #F0F4F0;
+            color: var(--dark-green);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .tag.screener { background-color: #FFF8E1; color: #F57F17; border: 1px solid #FFECB3; }
+
+        .survey-action { text-align: right; min-width: 120px; }
+        .reward {
+            color: var(--accent-gold);
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .btn-outline {
+            background-color: transparent;
+            color: var(--dark-green);
+            border: 2px solid var(--dark-green);
+            width: 100%;
+            padding: 0.5rem 1rem;
+        }
+        .btn-outline:hover { background-color: var(--dark-green); color: white; }
+        
+        .report-link {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--gray-text);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .report-link:hover { color: var(--danger); }
+
+        /* Sidebar Widgets */
+        .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+        .widget {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .widget h4 { margin-bottom: 0.5rem; color: var(--dark-text); font-family: 'Lora', serif; font-size: 1.2rem;}
+        
+        .progress-container {
+            background: #eee;
+            border-radius: 10px;
+            height: 8px;
+            width: 100%;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background: var(--accent-gold);
+            height: 100%;
+            width: 60%; /* Simulasi saldo */
+            transition: width 0.5s ease;
+        }
+
+        .quest-list { margin-top: 1rem; }
+        .quest-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px dashed #eee;
+            font-size: 0.9rem;
+        }
+        .quest-item:last-child { border-bottom: none; }
+        .quest-icon { display: inline-block; width: 20px; }
+        .quest-reward { color: var(--accent-gold); font-weight: 700; background: #FFFDF5; padding: 2px 6px; border-radius: 4px;}
+        
+        .btn-full { width: 100%; margin-top: 1rem;}
+        .btn-disabled { background-color: #ddd; color: #999; cursor: not-allowed; }
+        .btn-disabled:hover { background-color: #ddd; transform: none; }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            .survey-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .survey-action { text-align: left; width: 100%; }
+            .btn-outline { width: auto; }
+            .user-stats { justify-content: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-view" class="page-view active">
+        <div class="login-card">
+            <h1>Collab<span>Research</span></h1>
+            <p>Ekosistem pertukaran data riset anonim, valid, dan saling menguntungkan.</p>
+            
+            <button class="btn-google" onclick="doLogin()">
+                <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Masuk dengan Google
+            </button>
+            <p style="margin-top: 1.5rem; font-size: 0.8rem; color: #aaa;">Privasi Dijamin. Kami menggunakan sistem identitas samaran (Pseudonym).</p>
+        </div>
+    </div>
+
+    <div id="dashboard-view" class="page-view">
+        <nav>
+            <div class="logo">Collab<span>Research</span></div>
+            <div class="user-stats">
+                <span class="stat-badge">ID: <b style="color:var(--dark-text)">Scholar_Owl</b></span>
+                <span class="stat-badge points" id="nav-points">⭐ Saldo: 12 Poin</span>
+                <span class="stat-badge trust" title="Trust Score baik">🛡️ Trust: 98%</span>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="dashboard-header">
+                <h2>Selamat datang kembali, Scholar_Owl</h2>
+                <p>Profilmu sesuai dengan <strong>3 kuesioner</strong> hari ini. Bantu peneliti lain atau klaim poinmu untuk mulai menyebar kuesioner milikmu sendiri.</p>
+            </header>
+
+            <main>
+                <section class="token-box">
+                    <h2 class="section-title">Klaim Token / Validasi</h2>
+                    <p style="color: var(--gray-text); font-size: 0.95rem;">
+                        Telah menyelesaikan kuesioner? Masukkan <b>Kode Rahasia</b> yang muncul di halaman terakhir Google Forms untuk memvalidasi dan menerima imbalan Poin.
+                    </p>
+                    <div class="token-input-group">
+                        <input type="text" id="tokenInput" placeholder="Contoh: CR-9X8B-2026" autocomplete="off">
+                        <button id="claimBtn" onclick="claimToken()">Klaim Poin</button>
+                    </div>
+                    <div id="successAlert" class="alert-success"></div>
+                </section>
+
+                <section>
+                    <h2 class="section-title">Smart Matching: Cocok Untukmu</h2>
+                    <div class="survey-grid">
+                        
+                        <div class="survey-card">
+                            <div class="survey-info">
+                                <h3>Pengaruh Burnout terhadap Produktivitas Karyawan</h3>
+                                <div class="meta-info">
+                                    <span>⏱️ Estimasi: 10 Menit</span>
+                                    <span>🎯 Target: 100 Responden</span>
+                                </div>
+                                <div class="tags">
+                                    <span class="tag screener">⚠️ Ada Screener</span>
+                                    <span class="tag">#PekerjaPenuhWaktu</span>
+                                    <span class="tag">#Jabodetabek</span>
+                                    <span class="tag">Psikologi</span>
+                                </div>
+                            </div>
+                            <div class="survey-action">
+                                <span class="reward">+12 Poin</span>
+                                <button class="btn-outline">Ikuti Screener</button>
+                                <span class="report-link" onclick="reportSurvey()">Laporkan Pelanggaran</span>
+                            </div>
+                        </div>
+
+                        <div class="survey-card">
+                            <div class="survey-info">
+                                <h3>Perilaku Konsumtif Pengguna E-Wallet Generasi Z</h3>
+                                <div class="meta-info">
+                                    <span>⏱️ Estimasi: 5 Menit</span>
+                                    <span>🎯 Target: 250 Responden</span>
+                                </div>
+                                <div class="tags">
+                                    <span class="tag">#Mahasiswa</span>
+                                    <span class="tag">Ekonomi</span>
+                                </div>
+                            </div>
+                            <div class="survey-action">
+                                <span class="reward">+8 Poin</span>
+                                <button class="btn-outline">Isi Kuesioner</button>
+                                <span class="report-link" onclick="reportSurvey()">Laporkan Pelanggaran</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </main>
+
+            <aside class="sidebar">
+                <div class="widget">
+                    <h4>Kampanye Kuesioner</h4>
+                    <p style="font-size: 0.85rem; color: var(--gray-text);">Butuh minimal <b>20 Poin</b> untuk membuka akses penyebaran perdana.</p>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" id="publishProgress" style="width: 60%;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: bold; color: var(--gray-text);">
+                        <span id="currentPointsText">12 Pts</span>
+                        <span>20 Pts</span>
+                    </div>
+
+                    <button class="btn-full btn-disabled" id="publishBtn" disabled>Buat Kuesioner Baru</button>
+                </div>
+
+                <div class="widget">
+                    <h4>Misi Alternatif Poin</h4>
+                    <p style="font-size: 0.85rem; color: var(--gray-text);">Kriteria tidak cocok? Kumpulkan poin lewat jalur ini:</p>
+                    
+                    <div class="quest-list">
+                        <div class="quest-item">
+                            <div><span class="quest-icon">📜</span> The Chronicler</div>
+                            <span class="quest-reward">+10 Poin</span>
+                        </div>
+                        <div class="quest-item">
+                            <div><span class="quest-icon">🧭</span> Pilot Study (Review)</div>
+                            <span class="quest-reward">+5 Poin</span>
+                        </div>
+                        <div class="quest-item">
+                            <div><span class="quest-icon">👁️</span> Moderator (Verifikasi)</div>
+                            <span class="quest-reward">+2 Poin</span>
+                        </div>
+                        <div class="quest-item" style="margin-top: 10px;">
+                            <button class="btn-outline" style="width: 100%; font-size: 0.85rem; padding: 0.4rem;">Top-Up Poin Instan</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        let userPoints = 12;
+        const requiredPublishPoints = 20;
+
+        // Fungsi Transisi Login ke Dashboard
+        function doLogin() {
+            document.getElementById('login-view').classList.remove('active');
+            // Sedikit delay untuk efek realistis
+            setTimeout(() => {
+                document.getElementById('dashboard-view').classList.add('active');
+                window.scrollTo(0,0);
+            }, 300);
+        }
+
+        // Fungsi Simulasi Klaim Token (Blind Handshake)
+        function claimToken() {
+            const inputField = document.getElementById('tokenInput');
+            const tokenVal = inputField.value.trim();
+            const alertBox = document.getElementById('successAlert');
+            const btn = document.getElementById('claimBtn');
+
+            if(tokenVal === "") {
+                alert("Mohon masukkan kode rahasia dari halaman Google Forms.");
+                return;
+            }
+
+            // Simulasi proses loading (Time-Tracking check dummy)
+            btn.innerText = "Memverifikasi...";
+            btn.style.opacity = "0.8";
+
+            setTimeout(() => {
+                // Berhasil
+                const reward = 8; // dummy reward
+                userPoints += reward;
+                
+                // Update UI Poin
+                document.getElementById('nav-points').innerText = `⭐ Saldo: ${userPoints} Poin`;
+                document.getElementById('currentPointsText').innerText = `${userPoints} Pts`;
+                
+                // Update Progress Bar Penyebaran Kuesioner
+                let percentage = (userPoints / requiredPublishPoints) * 100;
+                if (percentage > 100) percentage = 100;
+                document.getElementById('publishProgress').style.width = `${percentage}%`;
+
+                // Buka kunci tombol Publish jika poin cukup
+                if (userPoints >= requiredPublishPoints) {
+                    const pubBtn = document.getElementById('publishBtn');
+                    pubBtn.classList.remove('btn-disabled');
+                    pubBtn.removeAttribute('disabled');
+                    pubBtn.style.backgroundColor = "var(--dark-green)";
+                    pubBtn.style.color = "white";
+                    pubBtn.style.cursor = "pointer";
+                    pubBtn.innerText = "✨ Sebar Kuesionermu";
+                }
+
+                // Tampilkan pesan sukses magis
+                alertBox.innerHTML = `✨ <b>Verifikasi Berhasil!</b> Kecepatan respons normal. ${reward} Poin telah ditambahkan ke saldomu.`;
+                alertBox.style.display = "block";
+                
+                // Reset input
+                inputField.value = "";
+                btn.innerText = "Klaim Poin";
+                btn.style.opacity = "1";
+
+                // Sembunyikan alert setelah 5 detik
+                setTimeout(() => { alertBox.style.display = "none"; }, 5000);
+
+            }, 1200);
+        }
+
+        // Fungsi Dummy Pelaporan Whistleblower
+        function reportSurvey() {
+            const confirmReport = confirm("PENTING: Apakah kuesioner ini meminta data pribadi (Nama, Email, No HP)? Laporan palsu akan menurunkan Trust Score Anda.");
+            if(confirmReport) {
+                alert("Laporan diterima. Kuesioner ini telah dibekukan sementara untuk ditinjau oleh Moderator.");
+            }
+        }
+    </script>
+</body>
+</html>
